@@ -6,7 +6,8 @@
 :root {
   --header-background-color: rgb(45, 44, 45);
   --content-background-color: rgb(55, 52, 71);
-  --card-background-color: rgb(236, 224, 252);
+  --card-background-color: rgb(255, 255, 255);
+  --info-font-color: rgb(29, 10, 135);
 }
 
 html {
@@ -61,4 +62,19 @@ body {
   background-color: var(--card-background-color);
   border-radius: 1rem;
   padding: 1rem;
+}
+
+.book-card > p {
+  font-size: 1.1rem;
+}
+
+.info {
+  font-size: 1.2rem;
+  color: var(--info-font-color);
+  font-weight: bold;
+}
+
+.book-card > .read {
+  font-size: 1.3rem;
+  font-weight: bold;
 }
