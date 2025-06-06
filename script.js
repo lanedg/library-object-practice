@@ -13,11 +13,6 @@ function addBookToLibrary(name, author, pages, read) {
   myLibrary.push(newBook);
 }
 
-addBookToLibrary("Harry Potter", "J.K. Rowling", 553, false);
-addBookToLibrary("Captain Underpants", "Dave Pilky", 35, true);
-addBookToLibrary("The Stand", "Steven King", 1102, true);
-addBookToLibrary("IT", "Steven King", 1221, true);
-
 function displayBooks() {
   const content = document.querySelector(".content");
   content.innerHTML = "";
