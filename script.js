@@ -20,6 +20,7 @@ addBookToLibrary("IT", "Steven King", 1221, true);
 
 function displayBooks() {
   const content = document.querySelector(".content");
+  content.innerHTML = "";
   for (let i = 0; i < myLibrary.length; i++) {
     const bookCard = createBookCard(content);
     createTitle(bookCard, myLibrary[i].name);
@@ -27,6 +28,8 @@ function displayBooks() {
     createPageCount(bookCard, myLibrary[i].pages);
     createID(bookCard, myLibrary[i].id);
     createRead(bookCard, myLibrary[i].read);
+    createDeleteButton(bookCard);
+    createReadButton(bookCard);
   }
 }
 
@@ -74,6 +77,8 @@ function createPageCount(container, pageCount) {
 }
 
 function createID(container, id) {
+  container.setAttribute("data-book-id", id);
+  /*
   const idP = document.createElement("p");
   idP.classList.add("id");
   const idText = document.createTextNode("ID: ");
@@ -83,6 +88,7 @@ function createID(container, id) {
   idInfo.classList.add("info");
   idP.appendChild(idInfo);
   container.appendChild(idP);
+  */
 }
 
 function createRead(container, read) {
@@ -97,3 +103,102 @@ function createRead(container, read) {
   }
   container.appendChild(readP);
 }
+
+function createDeleteButton(container) {
+  const deleteButton = document.createElement("button");
+  deleteButton.classList.add("delete");
+  deleteButton.textContent = "Remove Book";
+  container.appendChild(deleteButton);
+  deleteButton.addEventListener("click", () => {
+    const deleteIndex = findBookID(container.getAttribute("data-book-id"));
+    deleteBook(deleteIndex);
+    deleteBookCard(container.getAttribute("data-book-id"));
+  });
+}
+
+function findBookID(id) {
+  const checkIfRightID = (element) => element.id === id;
+  const deleteIndex = myLibrary.findIndex(checkIfRightID);
+  return deleteIndex;
+}
+
+function deleteBook(deleteIndex) {
+  myLibrary.splice(deleteIndex, 1);
+}
+
+function deleteBookCard(id) {
+  const cardToBeDeleted = document.querySelector(`[data-book-id="${id}"]`);
+  cardToBeDeleted.remove();
+}
+
+function createReadButton(container) {
+  const readButton = document.createElement("button");
+  readButton.classList.add("toggleRead");
+  readButton.textContent = "Read?";
+  readButton.addEventListener("click", () => {
+    const read = checkIfRead(container);
+    updateReadIndicator(container, read);
+  });
+  container.appendChild(readButton);
+}
+
+function checkIfRead(container) {
+  const bookIndex = findBookID(container.getAttribute("data-book-id"));
+  const read = myLibrary[bookIndex].read;
+  if (read === true) {
+    myLibrary[bookIndex].read = false;
+    return false;
+  } else {
+    myLibrary[bookIndex].read = true;
+    return true;
+  }
+}
+
+function updateReadIndicator(container, read) {
+  const readIndicator = container.querySelector(".read");
+  if (read === true) {
+    readIndicator.textContent = "Read";
+  } else {
+    readIndicator.textContent = "Unread";
+  }
+}
+
+const addBtn = document.querySelector(".add-book");
+const addDialog = document.getElementById("addDialog");
+const cancelBtn = document.getElementById("cancel");
+const confirmBtn = document.getElementById("confirm");
+const titleInput = document.getElementById("book-title");
+const authorInput = document.getElementById("book-author");
+const pagesInput = document.getElementById("book-pages");
+const addForm = document.getElementById("addForm");
+
+addBtn.addEventListener("click", () => {
+  addDialog.showModal();
+});
+
+cancelBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  addDialog.close();
+  addForm.reset();
+});
+
+confirmBtn.addEventListener("click", (event) => {
+  event.preventDefault();
+  if (
+    titleInput.value === "" ||
+    authorInput.value === "" ||
+    pagesInput.value === ""
+  ) {
+    addForm.reset();
+  } else {
+    addBookToLibrary(
+      titleInput.value,
+      authorInput.value,
+      Number(pagesInput.value),
+      false
+    );
+    addDialog.close();
+    addForm.reset();
+    displayBooks();
+  }
+});
